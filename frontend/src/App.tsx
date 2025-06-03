@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getTasks } from "./api/taskApi";
+import { getTasks, createTask } from "./api/taskApi";
 
 type Task = {
   id: number;
@@ -10,14 +10,52 @@ type Task = {
 
 function App() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [title, setTitle] = useState("");
+  const [dueDate, setDueDate] = useState("");
 
   useEffect(() => {
-    getTasks().then(setTasks).catch(console.error);
+    getTasks().then(setTasks);
   }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!title || !dueDate) return;
+
+    await createTask({
+      title,
+      dueDate,
+      isCompleted: false,
+    });
+
+    setTitle("");
+    setDueDate("");
+
+    // Refresh task list
+    const updated = await getTasks();
+    setTasks(updated);
+  };
 
   return (
     <div style={{ padding: 20 }}>
       <h1>📋 Task List</h1>
+
+      <form onSubmit={handleSubmit} style={{ marginBottom: 20 }}>
+        <input
+          type="text"
+          placeholder="Task title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
+        <input
+          type="date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+          required
+        />
+        <button type="submit">Add Task</button>
+      </form>
+
       <ul>
         {tasks.map((task) => (
           <li key={task.id}>
