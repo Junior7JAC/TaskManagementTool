@@ -15,3 +15,13 @@ export const createTask = async (task: {
   const res = await axios.post(API_URL, task);
   return res.data;
 };
+
+export const updateTask = async (task: {
+  id: number;
+  title: string;
+  dueDate: string;
+  isCompleted: boolean;
+}) => {
+  const res = await axios.put(`${API_URL}/${task.id}`, task);
+  return res.data;
+};
