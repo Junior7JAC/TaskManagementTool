@@ -4,6 +4,7 @@ using backend.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.Threading.Tasks;
 
 namespace backend.Controllers
 {
@@ -44,21 +45,6 @@ namespace backend.Controllers
             return CreatedAtAction(nameof(GetTask), new { id = task.Id }, task);
         }
 
-        // PUT: /api/tasks/5
-        [HttpPut("{id}")]
-        public IActionResult UpdateTask(int id, TaskItem updatedTask)
-        {
-            var task = _context.Tasks.Find(id);
-            if (task == null) return NotFound();
-
-            task.Title = updatedTask.Title;
-            task.IsCompleted = updatedTask.IsCompleted;
-            task.DueDate = updatedTask.DueDate;
-
-            _context.SaveChanges();
-            return NoContent();
-        }
-
         // DELETE: /api/tasks/5
         [HttpDelete("{id}")]
         public IActionResult DeleteTask(int id)
@@ -68,6 +54,20 @@ namespace backend.Controllers
 
             _context.Tasks.Remove(task);
             _context.SaveChanges();
+            return NoContent();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTask(int id, [FromBody] TaskItem updatedTask)
+        {
+            var task = await _context.Tasks.FindAsync(id);
+            if (task == null) return NotFound();
+
+            task.Title = updatedTask.Title;
+            task.IsCompleted = updatedTask.IsCompleted;
+            task.DueDate = updatedTask.DueDate;
+
+            await _context.SaveChangesAsync();
             return NoContent();
         }
     }
