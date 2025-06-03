@@ -1,0 +1,18 @@
+# Build files
+bin/
+obj/
+
+# User-specific files
+*.user
+*.vs/
+
+# SQLite DB file
+taskmanager.db
+
+# EF Migrations lock (runtime)
+*.db-shm
+*.db-wal
+
+# IDE stuff (optional)
+.vscode/
+/backend/taskmanager.db
