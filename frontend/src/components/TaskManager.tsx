@@ -19,12 +19,23 @@ const TaskManager: React.FC = () => {
         if (!title || !dueDate) return;
 
         if (editingTask) {
+            // Check if the values are unchanged
+            const dateOnly = editingTask.dueDate.split("T")[0];
+            const titleUnchanged = title === editingTask.title;
+            const dateUnchanged = dueDate === dateOnly;
+
+            if (titleUnchanged && dateUnchanged) {
+                alert("You must change the task title or due date before updating.");
+                return;
+            }
+
             await updateTask({
                 id: editingTask.id,
                 title,
                 dueDate,
                 isCompleted: editingTask.isCompleted,
             });
+
             setEditingTask(null);
         } else {
             await createTask({ title, dueDate, isCompleted: false });
@@ -36,6 +47,7 @@ const TaskManager: React.FC = () => {
         setDueDate("");
     };
 
+
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure you want to delete this task?")) return;
         await deleteTask(id);
@@ -46,7 +58,9 @@ const TaskManager: React.FC = () => {
     const handleEdit = (task: Task) => {
         setEditingTask(task);
         setTitle(task.title);
-        setDueDate(task.dueDate);
+        const dateOnly = task.dueDate.split("T")[0];
+        setDueDate(dateOnly);
+        //setDueDate(task.dueDate);
     };
 
     const handleToggle = async (task: Task) => {
@@ -64,7 +78,13 @@ const TaskManager: React.FC = () => {
                 setTitle={setTitle}
                 setDueDate={setDueDate}
                 editingTask={editingTask}
+                onCancelEdit={() => {
+                    setEditingTask(null);
+                    setTitle("");
+                    setDueDate("");
+                }}
             />
+
 
             <TaskList
                 tasks={tasks.filter((t) => !t.isCompleted)}

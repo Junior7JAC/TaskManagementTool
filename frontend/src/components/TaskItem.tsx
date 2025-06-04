@@ -9,6 +9,12 @@ type Props = {
   onDelete: (id: number) => void;
 };
 
+const formatDate = (iso: string) => {
+  const [year, month, day] = iso.split("T")[0].split("-");
+  return `${day}-${month}-${year}`;
+};
+
+
 const TaskItem: React.FC<Props> = ({ task, onToggle, onEdit, onDelete }) => {
   return (
     <div className={styles.taskRow}>
@@ -18,7 +24,7 @@ const TaskItem: React.FC<Props> = ({ task, onToggle, onEdit, onDelete }) => {
           checked={task.isCompleted}
           onChange={() => onToggle(task)}
         />{" "}
-        {task.title} (Due: {task.dueDate})
+        {task.title} (Due: {formatDate(task.dueDate)})
       </label>
       <button className={styles.button} onClick={() => onEdit(task)}>
         Edit

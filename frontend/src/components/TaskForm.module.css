@@ -29,3 +29,19 @@
   background-color: #0066cc;
 }
 
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.fullButton {
+  flex: 1;
+}
+
+.cancelButton {
+  flex: 0.33;
+  background-color: #444;
+  color: #fff;
+}
+
