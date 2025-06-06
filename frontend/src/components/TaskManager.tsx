@@ -117,7 +117,13 @@ const TaskManager: React.FC = () => {
 
 
             <TaskList
-                tasks={tasks.filter((t) => !t.isCompleted)}
+                tasks={tasks.filter((t) => !t.isCompleted)
+                    .sort((a, b) => {
+                        const aDate = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
+                        const bDate = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
+                        return aDate - bDate;
+                    })
+                }
                 title="Pending Tasks"
                 onToggle={handleToggle}
                 onEdit={handleEdit}
@@ -125,7 +131,13 @@ const TaskManager: React.FC = () => {
             />
 
             <TaskList
-                tasks={tasks.filter((t) => t.isCompleted)}
+                tasks={tasks.filter((t) => t.isCompleted)
+                    .sort((a, b) => {
+                        const aDate = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
+                        const bDate = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
+                        return aDate - bDate;
+                    })
+                }
                 title="Completed Tasks"
                 onToggle={handleToggle}
                 onEdit={handleEdit}
