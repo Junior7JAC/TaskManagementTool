@@ -21,11 +21,29 @@ namespace backend.Controllers
 
         // GET: /api/tasks
         [HttpGet]
-        public ActionResult<IEnumerable<TaskItem>> GetAllTasks()
-
+        public ActionResult<IEnumerable<TaskItem>> GetAllTasks([FromQuery] string? filter = null)
         {
-            return Ok(_context.Tasks.ToList());
+            var tasks = _context.Tasks.ToList();
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                var now = DateTime.UtcNow;
+
+                tasks = filter switch
+                {
+                    "day" => tasks.Where(t => t.DueDate.HasValue && t.DueDate.Value.Date == now.Date).ToList(),
+                    "week" => tasks.Where(t => t.DueDate.HasValue && t.DueDate.Value >= now.Date && t.DueDate.Value <= now.Date.AddDays(7 - (int)now.DayOfWeek)).ToList(),
+                    "month" => tasks.Where(t => t.DueDate.HasValue &&
+                                                 t.DueDate.Value.Month == now.Month &&
+                                                 t.DueDate.Value.Year == now.Year).ToList(),
+                    _ => tasks
+                };
+            }
+
+
+            return Ok(tasks);
         }
+
 
         // GET: /api/tasks/5
         [HttpGet("{id}")]

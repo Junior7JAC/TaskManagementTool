@@ -3,16 +3,19 @@ import { getTasks, createTask, updateTask, deleteTask } from "../api/taskApi";
 import TaskForm from "./TaskForm";
 import TaskList from "./TaskList";
 import type { Task } from "../types/Task";
+import styles from "./TaskManager.module.css";
 
 const TaskManager: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [title, setTitle] = useState("");
     const [dueDate, setDueDate] = useState("");
     const [editingTask, setEditingTask] = useState<Task | null>(null);
+    const [filter, setFilter] = useState<"day" | "week" | "month" | null>(null);
 
     useEffect(() => {
-        getTasks().then(setTasks);
-    }, []);
+        getTasks(filter || undefined).then(setTasks);
+    }, [filter]);
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -84,6 +87,33 @@ const TaskManager: React.FC = () => {
                     setDueDate("");
                 }}
             />
+
+            <div className={styles.buttonGroup}>
+                <button
+                    className={`${styles.filterButton} ${filter === null ? styles.activeFilter : ""}`}
+                    onClick={() => setFilter(null)}
+                >
+                    All
+                </button>
+                <button
+                    className={`${styles.filterButton} ${filter === "day" ? styles.activeFilter : ""}`}
+                    onClick={() => setFilter("day")}
+                >
+                    Today
+                </button>
+                <button
+                    className={`${styles.filterButton} ${filter === "week" ? styles.activeFilter : ""}`}
+                    onClick={() => setFilter("week")}
+                >
+                    This Week
+                </button>
+                <button
+                    className={`${styles.filterButton} ${filter === "month" ? styles.activeFilter : ""}`}
+                    onClick={() => setFilter("month")}
+                >
+                    This Month
+                </button>
+            </div>
 
 
             <TaskList

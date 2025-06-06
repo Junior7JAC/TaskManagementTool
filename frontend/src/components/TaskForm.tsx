@@ -11,7 +11,7 @@ type Props = {
   setTitle: (title: string) => void;
   setDueDate: (date: string) => void;
   editingTask: Task | null;
-  onCancelEdit?: () => void; // ⬅️ add this prop
+  onCancelEdit?: () => void;
 };
 
 const TaskForm: React.FC<Props> = ({
@@ -42,7 +42,16 @@ const TaskForm: React.FC<Props> = ({
 
       <DatePicker
         selected={dueDate ? new Date(dueDate) : null}
-        onChange={(date) => setDueDate(date?.toISOString().split("T")[0] ?? "")}
+        onChange={(date) => {
+          if (date) {
+            const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000)
+              .toISOString()
+              .split("T")[0];
+            setDueDate(localDate);
+          } else {
+            setDueDate("");
+          }
+        }}
         placeholderText="dd-mm-yyyy"
         dateFormat="dd-MM-yyyy"
         className={styles.input}

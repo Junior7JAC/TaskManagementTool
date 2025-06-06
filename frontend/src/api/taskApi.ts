@@ -2,10 +2,13 @@ import axios from "axios";
 
 const API_URL = "http://localhost:5000/api/tasks";
 
-export const getTasks = async () => {
-  const res = await axios.get(API_URL);
+export const getTasks = async (filter?: "day" | "week" | "month") => {
+  const res = await axios.get(API_URL, {
+    params: filter ? { filter } : {},
+  });
   return res.data;
 };
+
 
 export const createTask = async (task: {
   title: string;
