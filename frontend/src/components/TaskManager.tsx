@@ -107,7 +107,10 @@ const TaskManager: React.FC = () => {
                     setDueDate("");
                 }}
             />
-            {isLoading && <p className={styles.loader}>Loading tasks...</p>}
+            
+            {isLoading && (
+                <div className={styles.spinner}></div>
+            )}
 
             {feedback && <p className={styles.feedback}>{feedback}</p>}
 
