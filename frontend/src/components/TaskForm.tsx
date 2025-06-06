@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import type { Task } from "../types/Task";
 import styles from "./TaskForm.module.css";
 import DatePicker from "react-datepicker";
@@ -23,13 +23,44 @@ const TaskForm: React.FC<Props> = ({
   editingTask,
   onCancelEdit,
 }) => {
+  const [error, setError] = useState("");
+
+  const handleInternalSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!title.trim()) {
+      setError("Task title is required.");
+      return;
+    }
+
+    if (!dueDate) {
+      setError("Due date is required.");
+      return;
+    }
+
+    const selected = new Date(dueDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); 
+
+    if (selected < today) {
+      setError("Due date cannot be in the past.");
+      return;
+    }
+
+    setError(""); 
+    onSubmit(e);
+  };
+
+
   return (
-    <form onSubmit={onSubmit} className={styles.form}>
+    <form onSubmit={handleInternalSubmit} className={styles.form}>
       {editingTask && (
         <p style={{ color: "#ccc" }}>
           Editing task: <strong>{editingTask.title}</strong>
         </p>
       )}
+
+      {error && <p className={styles.error}>{error}</p>}
 
       <input
         className={styles.input}
@@ -37,7 +68,6 @@ const TaskForm: React.FC<Props> = ({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         placeholder="Task title"
-        required
       />
 
       <DatePicker
@@ -55,7 +85,9 @@ const TaskForm: React.FC<Props> = ({
         placeholderText="dd-mm-yyyy"
         dateFormat="dd-MM-yyyy"
         className={styles.input}
+        minDate={new Date()}
       />
+
 
       <div className={styles.buttonGroup}>
         <button type="submit" className={`${styles.button} ${styles.fullButton}`}>

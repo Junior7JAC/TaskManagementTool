@@ -1,6 +1,7 @@
 import React from "react";
 import type { Task } from "../types/Task";
 import TaskItem from "./TaskItem";
+import styles from "./TaskList.module.css"; 
 
 type Props = {
   tasks: Task[];
@@ -14,15 +15,24 @@ const TaskList: React.FC<Props> = ({ tasks, title, onToggle, onEdit, onDelete })
   return (
     <div>
       <h2>{title}</h2>
-      {tasks.map((task) => (
-        <TaskItem
-          key={task.id}
-          task={task}
-          onToggle={onToggle}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      ))}
+
+      {tasks.length === 0 ? (
+        <p className={styles.empty}>
+          {title === "Pending Tasks"
+            ? "No pending tasks yet."
+            : "No completed tasks yet."}
+        </p>
+      ) : (
+        tasks.map((task) => (
+          <TaskItem
+            key={task.id}
+            task={task}
+            onToggle={onToggle}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+        ))
+      )}
     </div>
   );
 };

@@ -24,3 +24,13 @@
 .button:hover {
   background-color: #444;
 }
+
+.overdue {
+  color: #ff4d4f;
+  font-weight: bold;
+}
+
+.today {
+  color: #ffa500;
+  font-weight: 500;
+}

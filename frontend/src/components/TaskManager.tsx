@@ -11,10 +11,29 @@ const TaskManager: React.FC = () => {
     const [dueDate, setDueDate] = useState("");
     const [editingTask, setEditingTask] = useState<Task | null>(null);
     const [filter, setFilter] = useState<"day" | "week" | "month" | null>(null);
+    const [feedback, setFeedback] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+
+
 
     useEffect(() => {
-        getTasks(filter || undefined).then(setTasks);
+        setIsLoading(true);
+        getTasks(filter || undefined).then((data) => {
+            setTasks(data);
+            setIsLoading(false);
+        });
     }, [filter]);
+
+
+    const showMessage = (msg: string) => {
+        setFeedback(msg);
+        requestAnimationFrame(() => {
+            setTimeout(() => {
+                setFeedback("");
+            }, 2000);
+        });
+    };
+
 
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -22,12 +41,10 @@ const TaskManager: React.FC = () => {
         if (!title || !dueDate) return;
 
         if (editingTask) {
-            // Check if the values are unchanged
             const dateOnly = editingTask.dueDate.split("T")[0];
-            const titleUnchanged = title === editingTask.title;
-            const dateUnchanged = dueDate === dateOnly;
+            const unchanged = title === editingTask.title && dueDate === dateOnly;
 
-            if (titleUnchanged && dateUnchanged) {
+            if (unchanged) {
                 alert("You must change the task title or due date before updating.");
                 return;
             }
@@ -38,23 +55,26 @@ const TaskManager: React.FC = () => {
                 dueDate,
                 isCompleted: editingTask.isCompleted,
             });
-
+            showMessage("Task updated!");
             setEditingTask(null);
         } else {
             await createTask({ title, dueDate, isCompleted: false });
+            showMessage("Task added!");
         }
 
-        const updated = await getTasks();
+        const updated = await getTasks(filter || undefined);
         setTasks(updated);
         setTitle("");
         setDueDate("");
     };
 
 
+
     const handleDelete = async (id: number) => {
         if (!confirm("Are you sure you want to delete this task?")) return;
         await deleteTask(id);
-        const updated = await getTasks();
+        showMessage("Task deleted!");
+        const updated = await getTasks(filter || undefined);
         setTasks(updated);
     };
 
@@ -87,6 +107,10 @@ const TaskManager: React.FC = () => {
                     setDueDate("");
                 }}
             />
+            {isLoading && <p className={styles.loader}>Loading tasks...</p>}
+
+            {feedback && <p className={styles.feedback}>{feedback}</p>}
+
 
             <div className={styles.buttonGroup}>
                 <button
@@ -133,9 +157,9 @@ const TaskManager: React.FC = () => {
             <TaskList
                 tasks={tasks.filter((t) => t.isCompleted)
                     .sort((a, b) => {
-                        const aDate = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
-                        const bDate = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
-                        return aDate - bDate;
+                        const aDate = a.dueDate ? new Date(a.dueDate).getTime() : -Infinity;
+                        const bDate = b.dueDate ? new Date(b.dueDate).getTime() : -Infinity;
+                        return bDate - aDate;
                     })
                 }
                 title="Completed Tasks"

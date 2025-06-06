@@ -16,9 +16,22 @@ const formatDate = (iso: string) => {
 
 
 const TaskItem: React.FC<Props> = ({ task, onToggle, onEdit, onDelete }) => {
+  const isOverdue =
+    !task.isCompleted &&
+    new Date(task.dueDate) < new Date(new Date().setHours(0, 0, 0, 0));
+
+  const isDueToday =
+    !task.isCompleted &&
+    new Date(task.dueDate).toDateString() === new Date().toDateString();
+
+
   return (
     <div className={styles.taskRow}>
-      <label className={styles.label}>
+      <label
+        className={`${styles.label} ${isOverdue ? styles.overdue : ""} ${isDueToday ? styles.today : ""
+          }`}
+      >
+
         <input
           type="checkbox"
           checked={task.isCompleted}
