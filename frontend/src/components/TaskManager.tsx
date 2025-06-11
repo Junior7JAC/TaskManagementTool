@@ -4,6 +4,7 @@ import TaskForm from "./TaskForm";
 import TaskList from "./TaskList";
 import type { Task } from "../types/Task";
 import styles from "./TaskManager.module.css";
+import { useNavigate } from "react-router-dom";
 
 const TaskManager: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -13,8 +14,14 @@ const TaskManager: React.FC = () => {
     const [filter, setFilter] = useState<"day" | "week" | "month" | null>(null);
     const [feedback, setFeedback] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
-
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            navigate("/login");
+        }
+    }, []);
 
     useEffect(() => {
         setIsLoading(true);
@@ -107,7 +114,7 @@ const TaskManager: React.FC = () => {
                     setDueDate("");
                 }}
             />
-            
+
             {isLoading && (
                 <div className={styles.spinner}></div>
             )}
