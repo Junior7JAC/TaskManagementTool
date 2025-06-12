@@ -53,3 +53,22 @@
   margin-bottom: 1rem;
 }
 
+body[data-theme='light'] .input {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+}
+
+body[data-theme='light'] .button {
+  background-color: #007aff;
+  color: #fff;
+}
+
+body[data-theme='light'] .button:hover {
+  background-color: #005bbb;
+}
+
+body[data-theme='light'] .cancelButton {
+  background-color: #ccc;
+  color: #000;
+}

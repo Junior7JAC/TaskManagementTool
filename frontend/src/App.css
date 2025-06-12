@@ -7,12 +7,22 @@
 
 body {
   margin: 0;
-  background-color: #121212; 
-  color: #ffffff;
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: flex-start;
+}
+
+/* Dark mode */
+body[data-theme='dark'] {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+/* Light mode — */
+body[data-theme='light'] {
+  background-color: #f2f2f2; 
+  color: #111111;
 }
 
 button {
@@ -27,9 +37,19 @@ button {
   flex-direction: column;
   align-items: center;
   gap: 2rem;
-  background-color: #1e1e1e;
-  color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px #00000066;
 }
+
+body[data-theme='dark'] .app-wrapper {
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+/* Light mode styling for wrapper */
+body[data-theme='light'] .app-wrapper {
+  background-color: #ffffff; 
+  color: #111;
+}
+
 

@@ -34,3 +34,27 @@
   color: #ffa500;
   font-weight: 500;
 }
+
+
+body[data-theme="light"] .button {
+  background-color: #eeeeee;
+  color: #111;
+  border: 1px solid #ccc;
+}
+
+body[data-theme="light"] .button:hover {
+  background-color: #dddddd;
+}
+
+body[data-theme='light'] .label {
+  color: #111111;
+}
+
+body[data-theme='light'] .overdue {
+  color: #cc0000;
+}
+
+body[data-theme='light'] .today {
+  color: #cc8400;
+}
+

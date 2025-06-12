@@ -5,6 +5,7 @@ import TaskList from "./TaskList";
 import type { Task } from "../types/Task";
 import styles from "./TaskManager.module.css";
 import { useNavigate } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
 const TaskManager: React.FC = () => {
     const [tasks, setTasks] = useState<Task[]>([]);
@@ -118,17 +119,25 @@ const TaskManager: React.FC = () => {
     };
 
     const handleLogout = () => {
+        const confirmed = window.confirm("Are you sure you want to logout?");
+        if (!confirmed) return;
+
         localStorage.removeItem("token");
         navigate("/login");
     };
 
+
     return (
-  <div className={styles.taskManager}>
-    <div className={styles.logoutWrapper}>
-      <button className={styles.logoutButton} onClick={handleLogout}>
-        Logout
-      </button>
-    </div>
+        <div className={styles.taskManager}>
+            <div className={styles.themeWrapper}>
+                <ThemeToggle />
+            </div>
+
+            <div className={styles.logoutWrapper}>
+                <button className={styles.logoutButton} onClick={handleLogout}>
+                    Logout
+                </button>
+            </div>
 
 
             <TaskForm

@@ -88,3 +88,40 @@
 .logoutButton:hover {
   background-color: #d63031;
 }
+
+
+.themeWrapper {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+}
+
+.themeWrapper button {
+  padding: 0.5rem 1rem;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.themeWrapper button:hover {
+  background-color: #666;
+}
+
+body[data-theme='light'] .filterButton {
+  background-color: #eeeeee;
+  color: #111;
+  border: 1px solid #ccc;
+}
+
+body[data-theme='light'] .filterButton:hover {
+  background-color: #dddddd;
+}
+
+body[data-theme='light'] .activeFilter {
+  background-color: #cccccc;
+  color: #111;
+  font-weight: bold;
+}
