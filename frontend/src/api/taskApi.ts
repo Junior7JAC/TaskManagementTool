@@ -1,34 +1,42 @@
 import axios from "axios";
+import type { Task } from "../types/Task";
 
-const API_URL = "http://localhost:5000/api/tasks";
+// Create Axios instance
+const api = axios.create({
+  baseURL: "http://localhost:5000/api",
+});
 
-export const getTasks = async (filter?: "day" | "week" | "month") => {
-  const res = await axios.get(API_URL, {
+// Automatically add Authorization header to all requests
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// GET /tasks (optionally with ?filter=day|week|month)
+export const getTasks = async (filter?: string) => {
+  const res = await api.get("/tasks", {
     params: filter ? { filter } : {},
   });
   return res.data;
 };
 
-
-export const createTask = async (task: {
-  title: string;
-  isCompleted: boolean;
-  dueDate: string;
-}) => {
-  const res = await axios.post(API_URL, task);
+// POST /tasks
+export const createTask = async (task: Partial<Task>) => {
+  const res = await api.post("/tasks", task);
   return res.data;
 };
 
-export const updateTask = async (task: {
-  id: number;
-  title: string;
-  dueDate: string;
-  isCompleted: boolean;
-}) => {
-  const res = await axios.put(`${API_URL}/${task.id}`, task);
+// PUT /tasks/:id
+export const updateTask = async (task: Task) => {
+  const res = await api.put(`/tasks/${task.id}`, task);
   return res.data;
 };
 
+// DELETE /tasks/:id
 export const deleteTask = async (id: number) => {
-  await axios.delete(`${API_URL}/${id}`);
+  const res = await api.delete(`/tasks/${id}`);
+  return res.data;
 };

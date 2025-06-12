@@ -31,6 +31,24 @@ const TaskManager: React.FC = () => {
         });
     }, [filter]);
 
+    useEffect(() => {
+    setIsLoading(true);
+    getTasks(filter || undefined)
+        .then((data) => {
+            setTasks(data);
+            setIsLoading(false);
+        })
+        .catch((error) => {
+            setIsLoading(false);
+            if (error.response?.status === 401 || error.response?.status === 403) {
+                localStorage.removeItem("token");
+                navigate("/login");
+            } else {
+                console.error("Failed to fetch tasks:", error);
+            }
+        });
+}, [filter]);
+
 
     const showMessage = (msg: string) => {
         setFeedback(msg);

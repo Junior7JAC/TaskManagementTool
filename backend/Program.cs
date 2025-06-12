@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
 using System;
+using System.Linq;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,9 +20,10 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        policy.WithOrigins("http://localhost:5173") 
               .AllowAnyHeader()
-              .AllowAnyMethod();
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
@@ -33,7 +35,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<UserService>();
 
 // Controllers and Swagger
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    }); //INSPECT HERE
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -64,14 +70,18 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-app.UseCors("AllowFrontend");
+app.UseHttpsRedirection();   
+app.UseRouting();            
 
-app.UseHttpsRedirection();
-app.UseAuthentication();
+app.UseCors("AllowFrontend"); 
+
+app.UseAuthentication();     
 app.UseAuthorization();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapControllers();
+
 app.Run();
+
