@@ -32,22 +32,22 @@ const TaskManager: React.FC = () => {
     }, [filter]);
 
     useEffect(() => {
-    setIsLoading(true);
-    getTasks(filter || undefined)
-        .then((data) => {
-            setTasks(data);
-            setIsLoading(false);
-        })
-        .catch((error) => {
-            setIsLoading(false);
-            if (error.response?.status === 401 || error.response?.status === 403) {
-                localStorage.removeItem("token");
-                navigate("/login");
-            } else {
-                console.error("Failed to fetch tasks:", error);
-            }
-        });
-}, [filter]);
+        setIsLoading(true);
+        getTasks(filter || undefined)
+            .then((data) => {
+                setTasks(data);
+                setIsLoading(false);
+            })
+            .catch((error) => {
+                setIsLoading(false);
+                if (error.response?.status === 401 || error.response?.status === 403) {
+                    localStorage.removeItem("token");
+                    navigate("/login");
+                } else {
+                    console.error("Failed to fetch tasks:", error);
+                }
+            });
+    }, [filter]);
 
 
     const showMessage = (msg: string) => {
@@ -117,8 +117,20 @@ const TaskManager: React.FC = () => {
         setTasks(updated);
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/login");
+    };
+
     return (
-        <div>
+  <div className={styles.taskManager}>
+    <div className={styles.logoutWrapper}>
+      <button className={styles.logoutButton} onClick={handleLogout}>
+        Logout
+      </button>
+    </div>
+
+
             <TaskForm
                 onSubmit={handleSubmit}
                 title={title}

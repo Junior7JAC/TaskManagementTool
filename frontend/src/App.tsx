@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import TaskManager from "./components/TaskManager";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -10,9 +10,10 @@ function App() {
       <div className="app-wrapper">
         <h1>Task Manager</h1>
         <Routes>
-          <Route path="/" element={<TaskManager />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/tasks" element={<TaskManager />} /> 
         </Routes>
       </div>
     </BrowserRouter>

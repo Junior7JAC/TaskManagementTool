@@ -61,4 +61,30 @@
     transform: rotate(360deg);
   }
 }
+.header {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 0;
+}
 
+.logoutWrapper {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 10;
+}
+
+.logoutButton {
+  padding: 0.5rem 1rem;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.logoutButton:hover {
+  background-color: #d63031;
+}

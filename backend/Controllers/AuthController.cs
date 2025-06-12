@@ -5,6 +5,8 @@ using backend.Data;
 using backend.Models;
 using System;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+
 
 namespace backend.Controllers
 {
@@ -22,6 +24,16 @@ namespace backend.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
         {
+            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+                return BadRequest(new { message = "Email and password are required." });
+
+            var emailRegex = new Regex(@"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", RegexOptions.IgnoreCase);
+            if (!emailRegex.IsMatch(request.Email))
+                return BadRequest(new { message = "Invalid email format." });
+
+            if (request.Password.Length < 4)
+                return BadRequest(new { message = "Password must be at least 4 characters long." });
+
             try
             {
                 var user = await _userService.RegisterUserAsync(request.Email, request.Password);
@@ -33,9 +45,18 @@ namespace backend.Controllers
             }
         }
 
+
+
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
+            if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
+                return BadRequest(new { message = "Email and password are required." });
+
+            var emailRegex = new Regex(@"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", RegexOptions.IgnoreCase);
+            if (!emailRegex.IsMatch(request.Email))
+                return BadRequest(new { message = "Invalid email format." });
+
             try
             {
                 Console.WriteLine($"Attempting login: {request.Email}");
@@ -59,5 +80,6 @@ namespace backend.Controllers
                 return StatusCode(500, "Internal server error");
             }
         }
+
     }
 }
